@@ -1,0 +1,33 @@
+;; The first three lines of this file were inserted by DrRacket. They record metadata
+;; about the language level of this file in a form that our tools can easily process.
+#reader(lib "htdp-advanced-reader.ss" "lang")((modname flower) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #t #t none #f () #f)))
+(require 2htdp/image)
+
+(define ANGLE 137.5)
+
+(define (petal i x)
+  (local [(define (petals i x acc)
+            (local [(define petal (put-pinhole
+                                   i i
+                                   (overlay (ellipse (* i 5) (* i 2) "solid" (colorpick (modulo acc 3)))
+                                            (ellipse (* i 5) (* i 2) "outline" "Maroon"))))]
+              (cond [(> acc x) empty-image]
+                    [else
+                     (overlay/pinhole
+                      (rotate (* ANGLE acc) petal)
+                      (petals (+ i 3) x (+ acc 1)))])))]
+    (petals i x 1)))
+
+(define (colorpick num)
+  (cond [(= num 0) (make-color 218 112 214)]
+        [(= num 1) (make-color 178 112 218)]
+        [(= num 2) (make-color 218 112 170)]))
+
+; i is initial size
+; x is number of petals
+; c is color
+(define (flower i x)
+  (clear-pinhole (overlay/pinhole (circle (* i 2) "solid" "Gold") (petal i x))))
+
+(flower 10 34)
+  
